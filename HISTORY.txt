@@ -1,0 +1,15 @@
+Version history
+===============
+
+0.2
+---
+
+* also delete ``version_id`` from the object
+* check if object can be versioned before cleaning
+
+0.1
+---
+
+* First version
+
+

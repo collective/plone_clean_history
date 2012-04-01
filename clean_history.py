@@ -11,8 +11,10 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManager import setSecurityPolicy
 from Testing.makerequest import makerequest
 from Products.CMFCore.tests.base.security import PermissiveSecurityPolicy, OmnipotentUser
+#from Products.CMFEditions.utilities import isObjectVersioned
+from Products.Archetypes.utils import shasattr
 
-version = '0.1'
+version = '0.2'
 usage = "usage: /your/instance run clean_history.py [options] [sites]"
 description = "Cleanup CMFEdition history in Plone sites. Default is: all sites in the database."
 p = optparse.OptionParser(usage=usage, version="%prog " + version, description=description,
@@ -59,6 +61,7 @@ for id, site in sites:
     if not psite or id in psite:
         print "Analyzing %s" % id
         policy = site.portal_purgepolicy
+        portal_repository = site.portal_repository
         if policy.maxNumberOfVersionsToKeep==-1 and not options.keep_history:
             print "... maxNumberOfVersionsToKeep is -1; skipping"
             continue
@@ -79,15 +82,20 @@ for id, site in sites:
                 print "... cleaning history for %s (%s)" % (x.getPath(), x.portal_type)
             try:
                 obj = x.getObject()
-                obj, history_id = dereference(obj)
-                policy.beforeSaveHook(history_id, obj)
-                if options.verbose:
-                    print "... cleaned!" 
+                isVersionable = portal_repository.isVersionable(obj)
+                if isVersionable:
+                    obj, history_id = dereference(obj)
+                    policy.beforeSaveHook(history_id, obj)
+                    if shasattr(obj, 'version_id'):
+                        del obj.version_id
+                    if options.verbose:
+                        print "... cleaned!" 
             except ConflictError:
                 raise
-            except:
+            except Exception, inst:
                 # sometimes, even with the spoofed request, the getObject failed
-                print "ERROR purging %s" % x.getPath()
+                print "ERROR purging %s (%s)" % (x.getPath(), x.portal_type)
+                print "    %s" % inst
 
         policy.maxNumberOfVersionsToKeep = old_maxNumberOfVersionsToKeep
         transaction.commit()
