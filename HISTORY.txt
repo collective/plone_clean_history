@@ -1,6 +1,11 @@
 Version history
 ===============
 
+0.2.1
+-----
+
+* delete the ``version_id`` only when don't want to keep history
+
 0.2
 ---
 

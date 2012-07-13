@@ -86,7 +86,7 @@ for id, site in sites:
                 if isVersionable:
                     obj, history_id = dereference(obj)
                     policy.beforeSaveHook(history_id, obj)
-                    if shasattr(obj, 'version_id'):
+                    if shasattr(obj, 'version_id') and options.keep_history<=1:
                         del obj.version_id
                     if options.verbose:
                         print "... cleaned!" 
