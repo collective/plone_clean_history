@@ -14,7 +14,7 @@ from Products.CMFCore.tests.base.security import PermissiveSecurityPolicy, Omnip
 #from Products.CMFEditions.utilities import isObjectVersioned
 from Products.Archetypes.utils import shasattr
 
-version = '0.2'
+version = '0.2.1'
 usage = "usage: /your/instance run clean_history.py [options] [sites]"
 description = "Cleanup CMFEdition history in Plone sites. Default is: all sites in the database."
 p = optparse.OptionParser(usage=usage, version="%prog " + version, description=description,
