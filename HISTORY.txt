@@ -1,6 +1,11 @@
 Version history
 ===============
 
+0.3
+---
+
+* cleanup
+
 0.2.1
 -----
 
@@ -16,5 +21,3 @@ Version history
 ---
 
 * First version
-
-

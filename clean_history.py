@@ -10,24 +10,44 @@ from Products.CMFEditions.utilities import dereference
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManager import setSecurityPolicy
 from Testing.makerequest import makerequest
-from Products.CMFCore.tests.base.security import PermissiveSecurityPolicy, OmnipotentUser
-#from Products.CMFEditions.utilities import isObjectVersioned
+from Products.CMFCore.tests.base.security import OmnipotentUser
+from Products.CMFCore.tests.base.security import PermissiveSecurityPolicy
 from Products.Archetypes.utils import shasattr
 
 version = '0.2.1'
 usage = "usage: /your/instance run clean_history.py [options] [sites]"
-description = "Cleanup CMFEdition history in Plone sites. Default is: all sites in the database."
-p = optparse.OptionParser(usage=usage, version="%prog " + version, description=description,
-                          prog="clean_history")
-p.add_option('--portal-type', '-p', dest="portal_types", default=[], action="append", metavar="PORTAL_TYPE",
-             help="select to cleanup only histories for a kind of portal_type. Default is \"all types\". "
-                  "Can be called multiple times.")
-p.add_option('--keep-history', '-k', type="int", dest="keep_history", default=0, metavar="HISTORY_SIZE",
-             help='Before purging, temporary set the value of "maximum number of versions to keep in the storage" to this '
-                  'value in the portal_purgehistory. Default is: do not change the value. In any case, the original value '
-                  'will be restored.')
-p.add_option('--verbose', '-v', action="store_true", default=False,
-             help="Show verbose output, for every cleaned content's history.")
+description = (
+    "Cleanup CMFEdition history in Plone sites. "
+    "Default is: all sites in the database.")
+p = optparse.OptionParser(
+    usage=usage,
+    version="%prog " + version,
+    description=description,
+    prog="clean_history")
+p.add_option(
+    '--portal-type', '-p',
+    dest="portal_types",
+    default=[],
+    action="append",
+    metavar="PORTAL_TYPE",
+    help=("Select to cleanup only histories for a kind of portal_type. "
+          "Default is all types. Can be called multiple times."))
+p.add_option(
+    '--keep-history', '-k',
+    type="int",
+    dest="keep_history",
+    default=0,
+    metavar="HISTORY_SIZE",
+    help=('Before purging, temporary set the value of '
+          '"maximum number of versions to keep in the storage" to this '
+          'value in the portal_purgehistory. Default is: do not change '
+          'the value. In any case, the original value will be restored.'))
+p.add_option(
+    '--verbose',
+    '-v',
+    action="store_true",
+    default=False,
+    help="Show verbose output, for every cleaned content's history.")
 
 args = sys.argv[1:]
 options, psite = p.parse_args(args)
@@ -47,18 +67,19 @@ def spoofRequest(app):
     This allows acquisition to work properly
     """
     _policy = PermissiveSecurityPolicy()
-    _oldpolicy = setSecurityPolicy(_policy)
+    setSecurityPolicy(_policy)
     newSecurityManager(None, OmnipotentUser().__of__(app.acl_users))
     return makerequest(app)
 
 # Enable Faux HTTP request object
-app = spoofRequest(app)
+app = spoofRequest(app)  # noqa
 
 sites = [(id, site) for (id, site) in app.items() if hasattr(
     site, 'meta_type') and site.meta_type == 'Plone Site']
 
-print 'Starting analysis for %s. Types to cleanup: %s' % (not psite and 'all sites' or ', '.join(psite),
-                                                          not pp_type and 'all' or ', '.join(pp_type))
+print 'Starting analysis for %s. Types to cleanup: %s' % (
+    not psite and 'all sites' or ', '.join(psite),
+    not pp_type and 'all' or ', '.join(pp_type))
 for id, site in sites:
     if not psite or id in psite:
         print "Analyzing %s" % id
@@ -70,8 +91,8 @@ for id, site in sites:
 
         old_maxNumberOfVersionsToKeep = policy.maxNumberOfVersionsToKeep
         if options.keep_history:
-            print "... Putting maxNumberOfVersionsToKeep from %d to %s" % (old_maxNumberOfVersionsToKeep,
-                                                                           options.keep_history)
+            print "... Putting maxNumberOfVersionsToKeep from %d to %s" % (
+                old_maxNumberOfVersionsToKeep, options.keep_history)
             policy.maxNumberOfVersionsToKeep = options.keep_history
 
         catalog = site.portal_catalog
@@ -81,7 +102,8 @@ for id, site in sites:
             results = catalog()
         for x in results:
             if options.verbose:
-                print "... cleaning history for %s (%s)" % (x.getPath(), x.portal_type)
+                print "... cleaning history for %s (%s)" % (
+                    x.getPath(), x.portal_type)
             try:
                 obj = x.getObject()
                 isVersionable = portal_repository.isVersionable(obj)
