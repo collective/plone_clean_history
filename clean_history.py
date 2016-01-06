@@ -15,7 +15,7 @@ from Products.CMFCore.tests.base.security import PermissiveSecurityPolicy
 from Products.Archetypes.utils import shasattr
 
 version = '0.2.1'
-usage = "usage: /your/instance run clean_history.py [options] [sites]"
+usage = "Usage: /your/instance run clean_history.py [options] [sites]"
 description = (
     "Cleanup CMFEdition history in Plone sites. "
     "Default is: all sites in the database.")
