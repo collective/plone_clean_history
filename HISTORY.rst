@@ -4,6 +4,8 @@ Version history
 0.3
 ---
 
+* Catch and reraise KeyboardInterrupt, so you can interrupt the script.
+
 * Added note to transaction commit.
 
 * Added ``dry-run`` option.

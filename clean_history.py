@@ -159,7 +159,7 @@ for id, site in sites:
                         del obj.version_id
                     if options.verbose:
                         print "... cleaned!"
-            except ConflictError:
+            except (ConflictError, KeyboardInterrupt):
                 raise
             except Exception, inst:
                 # sometimes, even with the spoofed request, the getObject
