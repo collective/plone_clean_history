@@ -55,6 +55,12 @@ p.add_option(
           'and purge all too old versions at the same time, '
           'especially when the value was unlimited (-1) until now.'))
 p.add_option(
+    '--dry-run',
+    action="store_true",
+    dest="dry_run",
+    metavar="DRY_RUN",
+    help='Dry run: do not commit any changes.')
+p.add_option(
     '--verbose',
     '-v',
     action="store_true",
@@ -74,6 +80,19 @@ except NameError:
 if options.keep_history is not None and options.keep_history < 0:
     print 'Error: the keep history argument must be 0 or higher.'
     sys.exit(1)
+
+
+def commit(note):
+    """Commit transaction, with note.
+    """
+    print(note)
+    if options.dry_run:
+        print('Dry run selected, not committing.')
+        return
+    # Commit transaction and add note.
+    tr = transaction.get()
+    tr.note(note)
+    transaction.commit()
 
 
 def spoofRequest(app):
@@ -150,7 +169,7 @@ for id, site in sites:
 
         if not options.permanent:
             policy.maxNumberOfVersionsToKeep = old_maxNumberOfVersionsToKeep
-        transaction.commit()
+        commit('Purged CMFEditions history to %d versions.' % keep)
 
 print 'End analysis'
 sys.exit(0)
