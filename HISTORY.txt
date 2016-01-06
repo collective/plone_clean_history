@@ -4,6 +4,8 @@ Version history
 0.3
 ---
 
+* Search without restrictions, like language.
+
 * cleanup
 
 0.2.1

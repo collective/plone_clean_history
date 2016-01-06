@@ -95,11 +95,12 @@ for id, site in sites:
                 old_maxNumberOfVersionsToKeep, options.keep_history)
             policy.maxNumberOfVersionsToKeep = options.keep_history
 
-        catalog = site.portal_catalog
+        # Search without restrictions, like language.
+        search = site.portal_catalog.unrestrictedSearchResults
         if pp_type:
-            results = catalog(portal_type=pp_type)
+            results = search(portal_type=pp_type)
         else:
-            results = catalog()
+            results = search()
         for x in results:
             if options.verbose:
                 print "... cleaning history for %s (%s)" % (
