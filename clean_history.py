@@ -39,21 +39,23 @@ except NameError:
     print p.print_help()
     sys.exit(1)
 
+
 def spoofRequest(app):
     """
     Make REQUEST variable to be available on the Zope application server.
 
     This allows acquisition to work properly
     """
-    _policy=PermissiveSecurityPolicy()
-    _oldpolicy=setSecurityPolicy(_policy)
+    _policy = PermissiveSecurityPolicy()
+    _oldpolicy = setSecurityPolicy(_policy)
     newSecurityManager(None, OmnipotentUser().__of__(app.acl_users))
     return makerequest(app)
 
 # Enable Faux HTTP request object
 app = spoofRequest(app)
 
-sites = [(id, site) for (id, site) in app.items() if hasattr(site, 'meta_type') and site.meta_type=='Plone Site']
+sites = [(id, site) for (id, site) in app.items() if hasattr(
+    site, 'meta_type') and site.meta_type == 'Plone Site']
 
 print 'Starting analysis for %s. Types to cleanup: %s' % (not psite and 'all sites' or ', '.join(psite),
                                                           not pp_type and 'all' or ', '.join(pp_type))
@@ -62,7 +64,7 @@ for id, site in sites:
         print "Analyzing %s" % id
         policy = site.portal_purgepolicy
         portal_repository = site.portal_repository
-        if policy.maxNumberOfVersionsToKeep==-1 and not options.keep_history:
+        if policy.maxNumberOfVersionsToKeep == -1 and not options.keep_history:
             print "... maxNumberOfVersionsToKeep is -1; skipping"
             continue
 
@@ -86,14 +88,15 @@ for id, site in sites:
                 if isVersionable:
                     obj, history_id = dereference(obj)
                     policy.beforeSaveHook(history_id, obj)
-                    if shasattr(obj, 'version_id') and options.keep_history<=1:
+                    if shasattr(obj, 'version_id') and options.keep_history <= 1:
                         del obj.version_id
                     if options.verbose:
-                        print "... cleaned!" 
+                        print "... cleaned!"
             except ConflictError:
                 raise
             except Exception, inst:
-                # sometimes, even with the spoofed request, the getObject failed
+                # sometimes, even with the spoofed request, the getObject
+                # failed
                 print "ERROR purging %s (%s)" % (x.getPath(), x.portal_type)
                 print "    %s" % inst
 
