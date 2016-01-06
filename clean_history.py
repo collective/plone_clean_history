@@ -36,12 +36,13 @@ p.add_option(
     '--keep-history', '-k',
     type="int",
     dest="keep_history",
-    default=0,
+    default=None,
     metavar="HISTORY_SIZE",
     help=('Before purging, temporary set the value of '
           '"maximum number of versions to keep in the storage" to this '
           'value in the portal_purgehistory. Default is: do not change '
-          'the value. In any case, the original value will be restored.'))
+          'the value. In any case, the original value will be restored, '
+          'except when you use the --permanent option.'))
 p.add_option(
     '--permanent',
     action="store_true",
@@ -70,7 +71,7 @@ except NameError:
     print p.print_help()
     sys.exit(1)
 
-if options.keep_history < 0:
+if options.keep_history is not None and options.keep_history < 0:
     print 'Error: the keep history argument must be 0 or higher.'
     sys.exit(1)
 
@@ -100,12 +101,14 @@ for id, site in sites:
         print "Analyzing %s" % id
         policy = site.portal_purgepolicy
         portal_repository = site.portal_repository
-        if policy.maxNumberOfVersionsToKeep == -1 and not options.keep_history:
-            print "... maxNumberOfVersionsToKeep is -1; skipping"
+        if (policy.maxNumberOfVersionsToKeep == -1 and
+                options.keep_history is None):
+            print("... maxNumberOfVersionsToKeep is -1 and no --keep-history "
+                  "argument has been given; skipping")
             continue
 
         old_maxNumberOfVersionsToKeep = policy.maxNumberOfVersionsToKeep
-        if options.keep_history:
+        if options.keep_history is not None:
             print "... Putting maxNumberOfVersionsToKeep from %d to %s" % (
                 old_maxNumberOfVersionsToKeep, options.keep_history)
             if options.permanent:
