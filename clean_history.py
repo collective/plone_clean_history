@@ -59,6 +59,10 @@ except NameError:
     print p.print_help()
     sys.exit(1)
 
+if options.keep_history < 0:
+    print 'Error: the keep history argument must be 0 or higher.'
+    sys.exit(1)
+
 
 def spoofRequest(app):
     """
@@ -94,6 +98,9 @@ for id, site in sites:
             print "... Putting maxNumberOfVersionsToKeep from %d to %s" % (
                 old_maxNumberOfVersionsToKeep, options.keep_history)
             policy.maxNumberOfVersionsToKeep = options.keep_history
+            keep = options.keep_history
+        else:
+            keep = policy.maxNumberOfVersionsToKeep
 
         # Search without restrictions, like language.
         search = site.portal_catalog.unrestrictedSearchResults
@@ -111,7 +118,7 @@ for id, site in sites:
                 if isVersionable:
                     obj, history_id = dereference(obj)
                     policy.beforeSaveHook(history_id, obj)
-                    if shasattr(obj, 'version_id') and options.keep_history <= 1:
+                    if shasattr(obj, 'version_id') and keep <= 1:
                         del obj.version_id
                     if options.verbose:
                         print "... cleaned!"
