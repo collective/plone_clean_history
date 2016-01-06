@@ -42,7 +42,9 @@ p.add_option(
           '"maximum number of versions to keep in the storage" to this '
           'value in the portal_purgehistory. Default is: do not change '
           'the value. In any case, the original value will be restored, '
-          'except when you use the --permanent option.'))
+          'except when you use the --permanent option. '
+          'The minimum is 1: the original object is included '
+          'in the count.'))
 p.add_option(
     '--permanent',
     action="store_true",
@@ -77,8 +79,9 @@ except NameError:
     print p.print_help()
     sys.exit(1)
 
-if options.keep_history is not None and options.keep_history < 0:
-    print 'Error: the keep history argument must be 0 or higher.'
+if options.keep_history is not None and options.keep_history < 1:
+    print('Error: the keep history argument must be 1 or higher: '
+          'the original object is included in the count.')
     sys.exit(1)
 
 

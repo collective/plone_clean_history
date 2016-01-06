@@ -4,6 +4,10 @@ Version history
 0.3
 ---
 
+* No longer allow 0 as ``--keep-history`` value.  The original object
+  is included in the count.  Strictly speaking 0 would ask to remove
+  all versions plus the original objects.  This would actually fail.
+
 * Catch and reraise KeyboardInterrupt, so you can interrupt the script.
 
 * Added note to transaction commit.
