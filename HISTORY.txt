@@ -4,6 +4,8 @@ Version history
 0.3
 ---
 
+* Added ``--permanent`` option.
+
 * Be more careful about keeping the history.
 
 * Search without restrictions, like language.

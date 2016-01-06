@@ -43,6 +43,17 @@ p.add_option(
           'value in the portal_purgehistory. Default is: do not change '
           'the value. In any case, the original value will be restored.'))
 p.add_option(
+    '--permanent',
+    action="store_true",
+    dest="permanent",
+    metavar="PERMANENT",
+    help=('Set the "maximum number of versions to keep in the storage" in '
+          'the portal_purgehistory permanently to the --keep-history value. '
+          'Default is False: restore the original value. '
+          'This option is useful when you want to change the stored value '
+          'and purge all too old versions at the same time, '
+          'especially when the value was unlimited (-1) until now.'))
+p.add_option(
     '--verbose',
     '-v',
     action="store_true",
@@ -97,6 +108,10 @@ for id, site in sites:
         if options.keep_history:
             print "... Putting maxNumberOfVersionsToKeep from %d to %s" % (
                 old_maxNumberOfVersionsToKeep, options.keep_history)
+            if options.permanent:
+                print "This change is permanent."
+            else:
+                print "This change is temporary."
             policy.maxNumberOfVersionsToKeep = options.keep_history
             keep = options.keep_history
         else:
@@ -130,7 +145,8 @@ for id, site in sites:
                 print "ERROR purging %s (%s)" % (x.getPath(), x.portal_type)
                 print "    %s" % inst
 
-        policy.maxNumberOfVersionsToKeep = old_maxNumberOfVersionsToKeep
+        if not options.permanent:
+            policy.maxNumberOfVersionsToKeep = old_maxNumberOfVersionsToKeep
         transaction.commit()
 
 print 'End analysis'
