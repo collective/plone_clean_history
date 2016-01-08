@@ -70,6 +70,12 @@ p.add_option(
     help="Show verbose output, for every cleaned content's history.")
 
 args = sys.argv[1:]
+# In Plone 4 and higher, the arguments we really want are prepended
+# with '-c' and '..../clean_history.py'.  Or possibly this depends on
+# the version of the plone.recipe.zope2instance recipe or the Zope
+# version.  So we strip this.
+if len(args) >= 2 and args[0] == '-c' and args[1].endswith('.py'):
+    args = args[2:]
 options, psite = p.parse_args(args)
 pp_type = options.portal_types
 

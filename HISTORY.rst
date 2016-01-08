@@ -4,6 +4,8 @@ Version history
 0.3
 ---
 
+* Fixed argument parsing in Plone 4 or newer Zope2 instance recipes.
+
 * No longer allow 0 as ``--keep-history`` value.  The original object
   is included in the count.  Strictly speaking 0 would ask to remove
   all versions plus the original objects.  This would actually fail.
