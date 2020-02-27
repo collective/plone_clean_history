@@ -4,6 +4,8 @@ Version history
 0.3
 ---
 
+* Use base_hasattr from CMFPlone instead of shasattr from Archetypes.
+
 * Fixed argument parsing in Plone 4 or newer Zope2 instance recipes.
 
 * No longer allow 0 as ``--keep-history`` value.  The original object

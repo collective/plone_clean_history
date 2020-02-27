@@ -12,7 +12,7 @@ from AccessControl.SecurityManager import setSecurityPolicy
 from Testing.makerequest import makerequest
 from Products.CMFCore.tests.base.security import OmnipotentUser
 from Products.CMFCore.tests.base.security import PermissiveSecurityPolicy
-from Products.Archetypes.utils import shasattr
+from Products.CMFPlone.utils import base_hasattr
 
 version = '0.2.1'
 usage = "Usage: /your/instance run clean_history.py [options] [sites]"
@@ -164,7 +164,7 @@ for id, site in sites:
                 if isVersionable:
                     obj, history_id = dereference(obj)
                     policy.beforeSaveHook(history_id, obj)
-                    if shasattr(obj, 'version_id') and keep <= 1:
+                    if base_hasattr(obj, 'version_id') and keep <= 1:
                         del obj.version_id
                     if options.verbose:
                         print "... cleaned!"
