@@ -148,12 +148,14 @@ for id, site in sites:
         else:
             keep = policy.maxNumberOfVersionsToKeep
 
-        # Search without restrictions, like language.
-        search = site.portal_catalog.unrestrictedSearchResults
+        pc = site.portal_catalog
         if pp_type:
-            results = search(portal_type=pp_type)
+            # Search without restrictions, like language.
+            results = pc.unrestrictedSearchResults(portal_type=pp_type)
+        elif hasattr(pc, 'getAllBrains'):
+            results = pc.getAllBrains()
         else:
-            results = search()
+            results = pc.unrestrictedSearchResults()
         for x in results:
             if options.verbose:
                 print "... cleaning history for %s (%s)" % (

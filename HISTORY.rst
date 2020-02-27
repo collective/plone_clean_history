@@ -4,6 +4,8 @@ Version history
 0.3
 ---
 
+* Use portal_catalog.getAllBrains, if available.
+
 * Use base_hasattr from CMFPlone instead of shasattr from Archetypes.
 
 * Fixed argument parsing in Plone 4 or newer Zope2 instance recipes.
