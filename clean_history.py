@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Original: https://github.com/collective/plone_clean_history
 import sys
 import optparse
 import transaction
