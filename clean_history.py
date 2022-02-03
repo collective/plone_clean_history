@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import sys
 import optparse
 import transaction
@@ -82,7 +81,7 @@ pp_type = options.portal_types
 try:
     foo = app
 except NameError:
-    print p.print_help()
+    print(p.print_help())
     sys.exit(1)
 
 if options.keep_history is not None and options.keep_history < 1:
@@ -121,12 +120,12 @@ app = spoofRequest(app)  # noqa
 sites = [(id, site) for (id, site) in app.items() if hasattr(
     site, 'meta_type') and site.meta_type == 'Plone Site']
 
-print 'Starting analysis for %s. Types to cleanup: %s' % (
+print('Starting analysis for %s. Types to cleanup: %s' % (
     not psite and 'all sites' or ', '.join(psite),
-    not pp_type and 'all' or ', '.join(pp_type))
+    not pp_type and 'all' or ', '.join(pp_type)))
 for id, site in sites:
     if not psite or id in psite:
-        print "Analyzing %s" % id
+        print("Analyzing %s" % id)
         policy = site.portal_purgepolicy
         portal_repository = site.portal_repository
         if (policy.maxNumberOfVersionsToKeep == -1 and
@@ -137,12 +136,12 @@ for id, site in sites:
 
         old_maxNumberOfVersionsToKeep = policy.maxNumberOfVersionsToKeep
         if options.keep_history is not None:
-            print "... Putting maxNumberOfVersionsToKeep from %d to %s" % (
-                old_maxNumberOfVersionsToKeep, options.keep_history)
+            print("... Putting maxNumberOfVersionsToKeep from %d to %s" % (
+                old_maxNumberOfVersionsToKeep, options.keep_history))
             if options.permanent:
-                print "This change is permanent."
+                print("This change is permanent.")
             else:
-                print "This change is temporary."
+                print("This change is temporary.")
             policy.maxNumberOfVersionsToKeep = options.keep_history
             keep = options.keep_history
         else:
@@ -158,8 +157,8 @@ for id, site in sites:
             results = pc.unrestrictedSearchResults()
         for x in results:
             if options.verbose:
-                print "... cleaning history for %s (%s)" % (
-                    x.getPath(), x.portal_type)
+                print("... cleaning history for %s (%s)" % (
+                    x.getPath(), x.portal_type))
             try:
                 obj = x.getObject()
                 isVersionable = portal_repository.isVersionable(obj)
@@ -169,18 +168,18 @@ for id, site in sites:
                     if base_hasattr(obj, 'version_id') and keep <= 1:
                         del obj.version_id
                     if options.verbose:
-                        print "... cleaned!"
+                        print("... cleaned!")
             except (ConflictError, KeyboardInterrupt):
                 raise
-            except Exception, inst:
+            except Exception as inst:
                 # sometimes, even with the spoofed request, the getObject
                 # failed
-                print "ERROR purging %s (%s)" % (x.getPath(), x.portal_type)
-                print "    %s" % inst
+                print("ERROR purging %s (%s)" % (x.getPath(), x.portal_type))
+                print("    %s" % inst)
 
         if not options.permanent:
             policy.maxNumberOfVersionsToKeep = old_maxNumberOfVersionsToKeep
         commit('Purged CMFEditions history to %d versions.' % keep)
 
-print 'End analysis'
+print('End analysis')
 sys.exit(0)
