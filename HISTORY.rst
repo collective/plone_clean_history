@@ -1,8 +1,10 @@
 Version history
 ===============
 
-0.3
----
+1.0.0
+-----
+
+* Make compatible with Python 2 and 3.
 
 * Use portal_catalog.getAllBrains, if available.
 

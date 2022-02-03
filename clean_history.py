@@ -14,7 +14,7 @@ from Products.CMFCore.tests.base.security import OmnipotentUser
 from Products.CMFCore.tests.base.security import PermissiveSecurityPolicy
 from Products.CMFPlone.utils import base_hasattr
 
-version = "0.2.1"
+version = "1.0.0"
 usage = "Usage: /your/instance run clean_history.py [options] [sites]"
 description = (
     "Cleanup CMFEdition history in Plone sites. "
