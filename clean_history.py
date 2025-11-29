@@ -85,6 +85,11 @@ p.add_option(
 )
 
 args = sys.argv[1:]
+
+# Handle zconsole "run etc/relstorage.conf script.py ..." wrapper
+if len(args) >= 3 and args[0] == "run" and args[1].endswith(".conf") and args[2].endswith(".py"):
+    args = args[3:]
+
 # In Plone 4 and higher, the arguments we really want are prepended
 # with '-c' and '..../clean_history.py'.  Or possibly this depends on
 # the version of the plone.recipe.zope2instance recipe or the Zope

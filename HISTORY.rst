@@ -1,6 +1,13 @@
 Version history
 ===============
 
+1.1.0
+----------
+
+* Check for running from zconsole wrapper with docker-entrypoint.sh in
+  containers @fredvd 
+
+
 1.0.0
 -----
 
